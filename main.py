@@ -27,8 +27,10 @@ if __name__ == "__main__":
     blacklist = load_blacklist_directory(dir_path+"/data/ip-blacklist")
 
     # Define the chain name and IP type (ipv4 or ipv6)
-    chain_name = "MAHAKALA-BLACKLIST"
+    chain_name = "MAHAKALA_BLACKLIST_INPUT"
     
+    # iptables -A INPUT -j MAHAKALA_BLACKLIST_INPUT
+
     # Iterate through IPv4 addresses
     for ipv4_info in blacklist["ips"]["ipv4"]:
         if not chain_exists(chain_name, "ipv4"):
