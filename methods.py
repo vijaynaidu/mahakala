@@ -266,7 +266,7 @@ def chain_exists(chain_name, ip_type="ipv4"):
 
 def delete_chain(chain_name, ip_type="ipv4"):
     """
-    Delete an iptables chain.
+    Delete an iptables chain and its rules.
 
     Args:
         chain_name (str): The name of the chain to delete.
@@ -278,12 +278,17 @@ def delete_chain(chain_name, ip_type="ipv4"):
     # Determine the appropriate command based on ip_type
     iptables_cmd = "iptables" if ip_type == "ipv4" else "ip6tables"
 
-    # Run the iptables command to delete the chain
+    # Run the iptables command to flush (delete) the chain rules and then delete the chain
+    flush_and_delete_chain_cmd = [iptables_cmd, "-F", chain_name]
     delete_chain_cmd = [iptables_cmd, "-X", chain_name]
 
     try:
+        # Flush (delete) the rules in the chain
+        subprocess.check_call(flush_and_delete_chain_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+
+        # Delete the chain itself
         subprocess.check_call(delete_chain_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
-        return True  # Chain successfully deleted
+        return True  # Chain and rules successfully deleted
     except subprocess.CalledProcessError as e:
         # Handle the error, chain might not exist
         return False
