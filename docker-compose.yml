@@ -1,0 +1,28 @@
+version: '3.1'
+services:
+  ubuntu-iptables:
+    image: omts/common/ubuntu-iptables:23.04
+    build: .
+    container_name: ubuntu-iptables.common.omts
+    # restart: "always"
+    restart: "no"
+    volumes:
+      - ./data:/omts/mahakala/data
+      - ./main.py:/omts/mahakala/main.py
+      - ./methods.py:/omts/mahakala/methods.py
+      - ./requirements.txt:/omts/mahakala/requirements.txt
+      - ./test_block.py:/omts/mahakala/test_block.py
+    stdin_open: true
+    tty: true
+    # command: bash
+    # command: python3 /omts/mahakala/main.py
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "10"
+    #network_mode: "host"

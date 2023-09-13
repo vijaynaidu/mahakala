@@ -1,0 +1,20 @@
+{
+    "ipBlacklistSourcesPath":"data/ip-blacklist",
+    "blackListSources": [
+        {
+            "name": "stamparm-ipsum-list",
+            "source": "https://github.com/stamparm/ipsum",
+            "description": "List of suspicious and/or malicious IP addresses.",
+            "fetchUrls": [
+                "https://raw.githubusercontent.com/stamparm/ipsum/master/levels/1.txt",
+                "https://raw.githubusercontent.com/stamparm/ipsum/master/levels/2.txt",
+                "https://raw.githubusercontent.com/stamparm/ipsum/master/levels/3.txt",
+                "https://raw.githubusercontent.com/stamparm/ipsum/master/levels/4.txt",
+                "https://raw.githubusercontent.com/stamparm/ipsum/master/levels/5.txt",
+                "https://raw.githubusercontent.com/stamparm/ipsum/master/levels/6.txt",
+                "https://raw.githubusercontent.com/stamparm/ipsum/master/levels/7.txt",
+                "https://raw.githubusercontent.com/stamparm/ipsum/master/levels/8.txt"
+            ]
+        }
+    ]
+}
