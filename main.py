@@ -47,5 +47,5 @@ if __name__ == "__main__":
 
 
 # iptables -F && ip6tables -F
-# iptables -n -L MAHAKALA-BLACKLIST --line-numbers
-# ip6tables -n -L MAHAKALA-BLACKLIST --line-numbers
+# iptables -n -L MAHAKALA_BLACKLIST_INPUT --line-numbers
+# ip6tables -n -L MAHAKALA_BLACKLIST_INPUT --line-numbers

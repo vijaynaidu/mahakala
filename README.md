@@ -16,6 +16,6 @@ Nerd's firewall for server hardening. Block the ip's from the data sources and a
 
 
 ## Quick Commands
-- `iptables -n -L MAHAKALA-BLACKLIST --line-numbers` and `ip6tables -n -L MAHAKALA-BLACKLIST --line-numbers` - List all the rules in the iptables of chain MAHAKALA-BLACKLIST
+- `iptables -n -L MAHAKALA_BLACKLIST_INPUT --line-numbers` and `ip6tables -n -L MAHAKALA_BLACKLIST_INPUT --line-numbers` - List all the rules in the iptables of chain MAHAKALA_BLACKLIST_INPUT
 - `iptables -L -n --line-numbers` - List all the rules in the iptables
 - `iptables -D INPUT <rule number>` - Delete a rule from iptables
