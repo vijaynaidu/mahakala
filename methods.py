@@ -236,7 +236,7 @@ def install_dependencies():
 
 def chain_exists(chain_name, ip_type="ipv4"):
     """
-    Check if an iptables chain exists.
+    Check if an iptables chain with the given name exists.
 
     Args:
         chain_name (str): The name of the chain to check.
@@ -248,18 +248,20 @@ def chain_exists(chain_name, ip_type="ipv4"):
     # Determine the appropriate command based on ip_type
     iptables_cmd = "iptables" if ip_type == "ipv4" else "ip6tables"
 
-    # Run the iptables command to list all chains
-    list_chains_cmd = [iptables_cmd, "-L", "--list-rules", "-n", "-v", "-t", "filter"]
-
+    # Run the iptables command to list chains and parse the output
+    list_chains_cmd = [iptables_cmd, "-L", "-n", "-v", "--line-numbers", "-t", "filter"]
     try:
         output = subprocess.check_output(list_chains_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
         lines = output.splitlines()
+
+        # Check if the chain exists in the output
         for line in lines:
-            if line.strip().startswith(f"Chain {chain_name} "):
+            if line.startswith("Chain") and chain_name == line.split()[1]:
                 return True
-        return False
+
+        return False  # Chain does not exist
     except subprocess.CalledProcessError as e:
-        # Handle the error, chain might not exist
+        # Handle any errors or exceptions here
         return False
 
 def delete_chain(chain_name, ip_type="ipv4"):

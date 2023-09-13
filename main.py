@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     # Define the chain name and IP type (ipv4 or ipv6)
     chain_name = "MAHAKALA-BLACKLIST"
-
+    
     # Iterate through IPv4 addresses
     for ipv4_info in blacklist["ips"]["ipv4"]:
         if not chain_exists(chain_name, "ipv4"):
