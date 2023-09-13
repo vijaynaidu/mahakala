@@ -191,8 +191,8 @@ def block_ip(ip_address, chain_name, ip_type="ipv4", protocol=None):
     # The chain may not exist, so we proceed to create it
 
     # Create the chain if it doesn't exist
-    create_chain_cmd = [iptables_cmd, "-N", chain_name]
-    subprocess.call(create_chain_cmd)
+    # create_chain_cmd = [iptables_cmd, "-N", chain_name]
+    # subprocess.call(create_chain_cmd)
 
     # Add the IP address to the block list with an optional protocol specification
     block_cmd = [iptables_cmd, "-A", chain_name, "-s", ip_address]
@@ -233,3 +233,84 @@ def install_dependencies():
     subprocess.call([dir_path+"/venv/bin/python", "-m", "pip", "install", "-r", "requirements.txt"])
     
     logging.info("Dependencies installed successfully.")
+
+def chain_exists(chain_name, ip_type="ipv4"):
+    """
+    Check if an iptables chain exists.
+
+    Args:
+        chain_name (str): The name of the chain to check.
+        ip_type (str): Type of IP address, "ipv4" (default) or "ipv6".
+
+    Returns:
+        bool: True if the chain exists, False otherwise.
+    """
+    # Determine the appropriate command based on ip_type
+    iptables_cmd = "iptables" if ip_type == "ipv4" else "ip6tables"
+
+    # Run the iptables command to list all chains
+    list_chains_cmd = [iptables_cmd, "-L", "--list-rules", "-n", "-v", "-t", "filter"]
+
+    try:
+        output = subprocess.check_output(list_chains_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+        lines = output.splitlines()
+        for line in lines:
+            if line.strip().startswith(f"Chain {chain_name} "):
+                return True
+        return False
+    except subprocess.CalledProcessError as e:
+        # Handle the error, chain might not exist
+        return False
+
+def delete_chain(chain_name, ip_type="ipv4"):
+    """
+    Delete an iptables chain.
+
+    Args:
+        chain_name (str): The name of the chain to delete.
+        ip_type (str): Type of IP address, "ipv4" (default) or "ipv6".
+
+    Returns:
+        bool: True if the chain was successfully deleted, False otherwise.
+    """
+    # Determine the appropriate command based on ip_type
+    iptables_cmd = "iptables" if ip_type == "ipv4" else "ip6tables"
+
+    # Run the iptables command to delete the chain
+    delete_chain_cmd = [iptables_cmd, "-X", chain_name]
+
+    try:
+        subprocess.check_call(delete_chain_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+        return True  # Chain successfully deleted
+    except subprocess.CalledProcessError as e:
+        # Handle the error, chain might not exist
+        return False
+
+def create_chain(chain_name, policy="DROP", ip_type="ipv4"):
+    """
+    Create an iptables chain with a given name and set its policy.
+
+    Args:
+        chain_name (str): The name of the chain to create.
+        policy (str): The default policy for the chain ("ACCEPT" or "DROP").
+        ip_type (str): Type of IP address, "ipv4" (default) or "ipv6".
+
+    Returns:
+        bool: True if the chain was successfully created, False otherwise.
+    """
+    # Determine the appropriate command based on ip_type
+    iptables_cmd = "iptables" if ip_type == "ipv4" else "ip6tables"
+
+    # Run the iptables command to create the chain and set its policy
+    create_chain_cmd = [iptables_cmd, "-N", chain_name]
+    set_policy_cmd = [iptables_cmd, "-P", chain_name, policy]
+
+    try:
+        subprocess.check_call(create_chain_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+        subprocess.check_call(set_policy_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+        return True  # Chain successfully created
+    except subprocess.CalledProcessError as e:
+        # Handle the error, chain might not be created
+        return False
+
+

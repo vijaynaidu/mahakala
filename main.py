@@ -4,7 +4,7 @@ Main module for Mahakala Firewall.
 import logging
 import os
 
-from methods import check_virtualenv, check_root, check_iptables, check_ip6tables, load_blacklist_directory, block_ip, create_virtualenv, install_dependencies
+from methods import check_virtualenv, check_root, check_iptables, check_ip6tables, load_blacklist_directory, block_ip, create_virtualenv, install_dependencies, chain_exists, create_chain
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -31,11 +31,15 @@ if __name__ == "__main__":
 
     # Iterate through IPv4 addresses
     for ipv4_info in blacklist["ips"]["ipv4"]:
+        if not chain_exists(chain_name, "ipv4"):
+            create_chain(chain_name=chain_name, policy="DROP", ip_type="ipv4")
         ip_address = ipv4_info["ip"]
         block_ip(ip_address, chain_name, ip_type="ipv4")
 
     # Iterate through IPv6 addresses
     for ipv6_info in blacklist["ips"]["ipv6"]:
+        if not chain_exists(chain_name, "ipv6"):
+            create_chain(chain_name=chain_name, policy="DROP", ip_type="ipv6")
         ip_address = ipv6_info["ip"]
         block_ip(ip_address, chain_name, ip_type="ipv6")
 
