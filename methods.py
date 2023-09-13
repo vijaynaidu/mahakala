@@ -310,14 +310,14 @@ def create_chain(chain_name, policy="DROP", ip_type="ipv4"):
 
     # Run the iptables command to create the chain and set its policy
     create_chain_cmd = [iptables_cmd, "-N", chain_name]
-    set_policy_cmd = [iptables_cmd, "-P", chain_name, policy]
+    # set_policy_cmd = [iptables_cmd, "-P", chain_name, policy]
 
     # iptables -A INPUT -j MAHAKALA_BLACKLIST_INPUT
     add_to_input_chain_cmd = [iptables_cmd, "-A", "INPUT", "-j", chain_name]
 
     try:
         subprocess.check_call(create_chain_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
-        subprocess.check_call(set_policy_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
+        # subprocess.check_call(set_policy_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
         subprocess.check_call(add_to_input_chain_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
         return True  # Chain successfully created
     except subprocess.CalledProcessError as e:
